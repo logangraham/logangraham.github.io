@@ -1,0 +1,299 @@
+/* Test Essay Styles - Tufte-inspired sidenotes & refined serif typography */
+
+/* Override container for wider layout to accommodate sidenotes */
+.container {
+    width: 87%;
+    max-width: 1400px;
+    padding: 40px 20px;
+}
+
+/* Article wrapper - creates space for sidenotes */
+article {
+    max-width: 55%;
+    margin: 0;
+    position: relative;
+}
+
+/* Typography refinements */
+h1 {
+    font-weight: 400;
+    font-size: 2.4rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+}
+
+.subtitle {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+body.dark-mode .subtitle {
+    color: #aaa;
+}
+
+p {
+    margin-bottom: 1.4rem;
+    text-align: left;
+    hyphens: auto;
+}
+
+/* Epigraph styling */
+.epigraph {
+    margin: 2rem 0 3rem 0;
+    padding-left: 1.5rem;
+    border-left: 2px solid #ddd;
+}
+
+body.dark-mode .epigraph {
+    border-left-color: #555;
+}
+
+.epigraph p {
+    font-style: italic;
+    margin-bottom: 0.5rem;
+}
+
+.epigraph footer {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+body.dark-mode .epigraph footer {
+    color: #999;
+}
+
+/* Section headings */
+h2 {
+    font-weight: 400;
+    font-size: 1.6rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+/* Sidenotes - Tufte style */
+.sidenote,
+.marginnote {
+    float: right;
+    clear: right;
+    margin-right: -60%;
+    width: 50%;
+    margin-top: 0.3rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    vertical-align: baseline;
+    position: relative;
+    color: #555;
+}
+
+body.dark-mode .sidenote,
+body.dark-mode .marginnote {
+    color: #aaa;
+}
+
+/* Sidenote numbering */
+.sidenote-number {
+    counter-increment: sidenote-counter;
+}
+
+.sidenote-number::after,
+.sidenote::before {
+    font-size: 0.75rem;
+    position: relative;
+    vertical-align: baseline;
+}
+
+.sidenote-number::after {
+    content: counter(sidenote-counter);
+    top: -0.4rem;
+    left: 0.1rem;
+    color: #a00;
+}
+
+body.dark-mode .sidenote-number::after {
+    color: #f77;
+}
+
+.sidenote::before {
+    content: counter(sidenote-counter) " ";
+    top: -0.4rem;
+    color: #a00;
+    margin-right: 0.2rem;
+}
+
+body.dark-mode .sidenote::before {
+    color: #f77;
+}
+
+/* Margin notes (no number) */
+.marginnote {
+    font-style: italic;
+}
+
+/* Counter reset */
+article {
+    counter-reset: sidenote-counter;
+}
+
+/* Input checkbox for mobile toggle - hidden by default */
+.margin-toggle {
+    display: none;
+}
+
+.margin-toggle:checked + .sidenote,
+.margin-toggle:checked + .marginnote {
+    display: block;
+    float: left;
+    left: 1rem;
+    clear: both;
+    width: 95%;
+    margin: 1rem 2.5%;
+    position: relative;
+}
+
+label.sidenote-number {
+    cursor: pointer;
+}
+
+label.margin-toggle:not(.sidenote-number) {
+    display: none;
+}
+
+/* Newthought - small caps for opening phrases */
+.newthought {
+    font-variant: small-caps;
+    font-size: 1.1em;
+    letter-spacing: 0.05em;
+}
+
+/* Full-width figures */
+figure {
+    margin: 2rem 0;
+}
+
+figure.fullwidth {
+    max-width: 100%;
+    clear: both;
+}
+
+figcaption {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
+body.dark-mode figcaption {
+    color: #999;
+}
+
+/* Blockquotes */
+blockquote {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+    border-left: 3px solid #ddd;
+    font-style: italic;
+}
+
+body.dark-mode blockquote {
+    border-left-color: #555;
+}
+
+/* Code styling */
+code {
+    font-family: Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.9em;
+    background: #f5f5f5;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+}
+
+body.dark-mode code {
+    background: #444;
+}
+
+/* Horizontal rule */
+hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 3rem 0;
+}
+
+body.dark-mode hr {
+    border-top-color: #555;
+}
+
+/* Responsive: stack sidenotes on smaller screens */
+@media (max-width: 1100px) {
+    article {
+        max-width: 70%;
+    }
+
+    .sidenote,
+    .marginnote {
+        margin-right: -42%;
+        width: 35%;
+    }
+}
+
+@media (max-width: 900px) {
+    .container {
+        width: 90%;
+    }
+
+    article {
+        max-width: 100%;
+    }
+
+    /* Convert sidenotes to inline on mobile */
+    .sidenote,
+    .marginnote {
+        display: none;
+    }
+
+    .margin-toggle:checked + .sidenote,
+    .margin-toggle:checked + .marginnote {
+        display: block;
+        float: none;
+        left: 0;
+        width: 100%;
+        margin: 1rem 0;
+        padding: 0.8rem 1rem;
+        background: #f9f9f9;
+        border-left: 3px solid #a00;
+    }
+
+    body.dark-mode .margin-toggle:checked + .sidenote,
+    body.dark-mode .margin-toggle:checked + .marginnote {
+        background: #3a3a3a;
+        border-left-color: #f77;
+    }
+
+    label.margin-toggle:not(.sidenote-number) {
+        display: inline;
+        cursor: pointer;
+        color: #a00;
+    }
+
+    body.dark-mode label.margin-toggle:not(.sidenote-number) {
+        color: #f77;
+    }
+
+    label.sidenote-number {
+        display: inline;
+    }
+}
+
+/* Print styles */
+@media print {
+    .sidenote,
+    .marginnote {
+        display: block;
+        float: right;
+        margin-right: -50%;
+        width: 45%;
+    }
+}

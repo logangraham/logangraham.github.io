@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>On the Margin of Thought</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="styles/test.css">
+    <script src="scripts/darkMode.js"></script>
+</head>
+<body>
+    <header class="site-header">
+        <nav>
+            <a href="/" class="nav-link">Home</a>
+            <button id="dark-mode-toggle" class="toggle-button"></button>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="main-content">
+            <article>
+                <h1>On the Margin of Thought</h1>
+                <p class="subtitle">A test essay exploring sidenotes, typography, and the architecture of reading</p>
+
+                <section class="epigraph">
+                    <p>The margins of a book are the wilderness surrounding the cultivated fields of the text.</p>
+                    <footer>— Edward Tufte, paraphrased</footer>
+                </section>
+
+                <p><span class="newthought">In the beginning</span> there was the margin, and the margin was without form, and void. Then came the scholar with a quill, filling those white spaces with commentary, corrections, and occasionally, drawings of cats.<label for="sn-1" class="margin-toggle sidenote-number"></label>
+                <input type="checkbox" id="sn-1" class="margin-toggle"/>
+                <span class="sidenote">Medieval manuscripts are filled with marginal illustrations of cats, often engaged in activities like catching mice, playing instruments, or, inexplicably, riding snails into battle.</span>
+                The margin has always been a space for the secondary voice, the whispered aside, the thought that couldn't quite fit in the main flow but demanded to be recorded nonetheless.</p>
+
+                <p>This essay is an experiment in form. It uses what are called <em>sidenotes</em>—a technique popularized by Edward Tufte in his beautiful books on data visualization and information design.<label for="sn-2" class="margin-toggle sidenote-number"></label>
+                <input type="checkbox" id="sn-2" class="margin-toggle"/>
+                <span class="sidenote">Tufte's books, particularly <em>The Visual Display of Quantitative Information</em> (1983), pioneered many conventions we now take for granted in information design. His use of sidenotes allows readers to access supplementary information without breaking their reading flow.</span>
+                Unlike footnotes, which banish related thoughts to the bottom of the page, or endnotes, which exile them to a distant chapter, sidenotes keep everything visible. The eye can travel laterally to consume additional context, then return to the main text without losing its place.</p>
+
+                <h2>The Architecture of Reading</h2>
+
+                <p>Consider how you read this sentence. Your eyes don't move smoothly across the line—they jump in quick movements called <em>saccades</em>, fixing on certain words while your brain fills in the gaps.<label for="sn-3" class="margin-toggle sidenote-number"></label>
+                <input type="checkbox" id="sn-3" class="margin-toggle"/>
+                <span class="sidenote">A saccade typically lasts 20-200 milliseconds. During this movement, vision is essentially suppressed—a phenomenon called saccadic masking. Your brain reconstructs continuous vision from these discrete samples.</span>
+                Good typography works with this process, not against it. The width of a column, the spacing between lines, the choice of typeface—all of these affect how easily your eyes can dance across the page.</p>
+
+                <label for="mn-1" class="margin-toggle">⊕</label>
+                <input type="checkbox" id="mn-1" class="margin-toggle"/>
+                <span class="marginnote">This is a margin note—similar to a sidenote but without a number. Use these for tangential observations that enhance but aren't essential to the main argument.</span>
+
+                <p>The typeface you're reading now is EB Garamond, a digital revival of the types cut by Claude Garamont in the sixteenth century. Garamond is what typographers call an "old-style" serif—the serifs (those small feet on the letters) are bracketed rather than hairline-thin, and there's relatively low contrast between thick and thin strokes. This makes it highly readable at small sizes and in long passages.</p>
+
+                <p>The line length here is deliberately constrained. Research suggests that optimal line length for reading is between 45 and 75 characters per line.<label for="sn-4" class="margin-toggle sidenote-number"></label>
+                <input type="checkbox" id="sn-4" class="margin-toggle"/>
+                <span class="sidenote">This recommendation comes from countless studies on reading comprehension and eye tracking. Lines that are too long make it difficult for the eye to find the next line; lines that are too short interrupt the reading rhythm with too-frequent line breaks.</span>
+                Too short, and the eye becomes fatigued from constantly jumping to new lines. Too long, and the eye loses its place when returning from the end of one line to the beginning of the next.</p>
+
+                <h2>On Minimalism</h2>
+
+                <p>There's a kind of quietness that good typography achieves. It doesn't call attention to itself. You don't notice the typeface or the margins or the leading—you simply read, absorbed in the ideas, unaware of the medium that conveys them.<label for="sn-5" class="margin-toggle sidenote-number"></label>
+                <input type="checkbox" id="sn-5" class="margin-toggle"/>
+                <span class="sidenote">Beatrice Warde, in her famous essay "The Crystal Goblet" (1932), argued that typography should be like a crystal wine glass—invisible, allowing the wine (the content) to shine through, rather than a golden goblet that draws attention to itself.</span></p>
+
+                <blockquote>
+                    <p>Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.</p>
+                </blockquote>
+
+                <p>This principle, from Antoine de Saint-Exupéry, applies as much to page design as to aircraft design (his original context). Each element on the page should earn its place. The margins are wide not from extravagance but because white space gives the eye rest. The type is large enough to read comfortably but not so large as to feel like a children's book. Every decision is in service of one goal: allowing ideas to travel from the page to the mind with as little friction as possible.</p>
+
+                <h2>The Digital Challenge</h2>
+
+                <p>Sidenotes present an interesting challenge on the web. Unlike a printed book, a webpage must accommodate screens of wildly varying sizes—from the vast expanse of a desktop monitor to the narrow confines of a mobile phone.<label for="sn-6" class="margin-toggle sidenote-number"></label>
+                <input type="checkbox" id="sn-6" class="margin-toggle"/>
+                <span class="sidenote">This page uses responsive design. On wide screens, sidenotes float in the margin. On narrow screens, they collapse into toggleable inline elements—tap the number to reveal them. Try resizing your browser window to see this in action.</span>
+                The solution is responsive design: on wide screens, the sidenotes float elegantly in the margin; on narrow screens, they transform into expandable elements that the reader can reveal with a tap.</p>
+
+                <p>This adaptability is both a constraint and an opportunity. The web cannot perfectly replicate the fixed dimensions of a printed page, but it can do things print cannot—dark mode for reading at night, hyperlinks that connect ideas across documents, and (with some JavaScript) interactive elements that respond to the reader's actions.</p>
+
+                <hr>
+
+                <p><span class="newthought">In conclusion,</span> this page is a playground—a place to experiment with typography, layout, and the subtle art of presenting ideas clearly. The sidenotes are working. The margins are breathing. The serif is doing its quiet, elegant work. And somewhere, perhaps, a reader has followed a thought from the main text to the margin and back again, their understanding slightly enriched by that small lateral journey.<label for="sn-7" class="margin-toggle sidenote-number"></label>
+                <input type="checkbox" id="sn-7" class="margin-toggle"/>
+                <span class="sidenote">If you've read this far, the experiment has succeeded. The form has served its purpose: carrying ideas from my mind to yours, with the sidenotes providing gentle elaboration along the way.</span></p>
+
+            </article>
+        </div>
+    </div>
+</body>
+</html>
