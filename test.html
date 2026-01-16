@@ -9,27 +9,30 @@
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/common.css">
     <link rel="stylesheet" href="styles/test.css">
-    <script src="scripts/darkMode.js"></script>
 </head>
 <body>
+    <div class="progress-bar" id="progress-bar"></div>
+    <div class="section-indicator" id="section-indicator"></div>
+    <button class="scroll-to-top" id="scroll-to-top" aria-label="Scroll to top">↑</button>
     <header class="site-header">
         <nav>
             <a href="/" class="nav-link">Home</a>
-            <button id="dark-mode-toggle" class="toggle-button"></button>
+            <button id="theme-toggle" class="toggle-button"></button><span class="theme-indicator" id="theme-indicator"></span>
         </nav>
     </header>
     <div class="container">
         <div class="main-content">
             <article>
-                <h1>On the Margin of Thought</h1>
-                <p class="subtitle">A test essay exploring sidenotes, typography, and the architecture of reading</p>
+                <h1 class="fade-in">On the Margin of Thought</h1>
+                <p class="subtitle fade-in">A test essay exploring sidenotes, typography, and the architecture of reading</p>
+                <p class="reading-time fade-in" id="reading-time"></p>
 
-                <section class="epigraph">
+                <section class="epigraph fade-in">
                     <p>The margins of a book are the wilderness surrounding the cultivated fields of the text.</p>
                     <footer>— Edward Tufte, paraphrased</footer>
                 </section>
 
-                <p><span class="newthought">In the beginning</span> there was the margin, and the margin was without form, and void. Then came the scholar with a quill, filling those white spaces with commentary, corrections, and occasionally, drawings of cats.<label for="sn-1" class="margin-toggle sidenote-number"></label>
+                <p class="drop-cap">In the beginning there was the margin, and the margin was without form, and void. Then came the scholar with a quill, filling those white spaces with commentary, corrections, and occasionally, drawings of cats.<label for="sn-1" class="margin-toggle sidenote-number"></label>
                 <input type="checkbox" id="sn-1" class="margin-toggle"/>
                 <span class="sidenote">Medieval manuscripts are filled with marginal illustrations of cats, often engaged in activities like catching mice, playing instruments, or, inexplicably, riding snails into battle.</span>
                 The margin has always been a space for the secondary voice, the whispered aside, the thought that couldn't quite fit in the main flow but demanded to be recorded nonetheless.</p>
@@ -78,14 +81,161 @@
 
                 <p>This adaptability is both a constraint and an opportunity. The web cannot perfectly replicate the fixed dimensions of a printed page, but it can do things print cannot—dark mode for reading at night, hyperlinks that connect ideas across documents, and (with some JavaScript) interactive elements that respond to the reader's actions.</p>
 
+                <h2>The Details That Delight</h2>
+
+                <p>This page is packed with small touches meant to enhance the reading experience. Look to the top of your screen—a thin progress bar shows how far you've read.<label for="sn-8" class="margin-toggle sidenote-number"></label>
+                <input type="checkbox" id="sn-8" class="margin-toggle"/>
+                <span class="sidenote">The progress bar uses a subtle gradient and updates smoothly as you scroll. It adapts its colors to match your chosen theme—red tones in light mode, softer corals in dark mode, and warm siennas in sepia.</span>
+                Glance at the left edge of your screen (on desktop)—an indicator shows which section you're currently reading.</p>
+
+                <p>Try the theme toggle in the top-right corner. It cycles through three modes: light for bright environments, sepia for a warm paper-like feel, and dark for nighttime reading.<label for="sn-9" class="margin-toggle sidenote-number"></label>
+                <input type="checkbox" id="sn-9" class="margin-toggle"/>
+                <span class="sidenote">Sepia mode is particularly kind to the eyes during extended reading sessions. The warm tones reduce blue light exposure and create a feeling reminiscent of aged paper.</span>
+                Your preference is saved, so it persists across visits.</p>
+
+                <label for="mn-2" class="margin-toggle">⊕</label>
+                <input type="checkbox" id="mn-2" class="margin-toggle"/>
+                <span class="marginnote">Notice how when you tapped a sidenote number, the parent paragraph briefly glowed? That subtle highlight helps you find your place after reading the note.</span>
+
+                <p>Scroll down past this point and you'll see a button appear in the bottom-right corner. Tap it to glide smoothly back to the top. And if you're on mobile, tap a sidenote number—watch how it elegantly expands with a buttery animation, then collapses when you tap again.</p>
+
+                <p>Even the way you arrived here was choreographed. When the page loaded, the title, subtitle, and opening content faded in with a gentle staggered animation—nothing jarring, just a quiet welcome.</p>
+
                 <hr>
 
-                <p><span class="newthought">In conclusion,</span> this page is a playground—a place to experiment with typography, layout, and the subtle art of presenting ideas clearly. The sidenotes are working. The margins are breathing. The serif is doing its quiet, elegant work. And somewhere, perhaps, a reader has followed a thought from the main text to the margin and back again, their understanding slightly enriched by that small lateral journey.<label for="sn-7" class="margin-toggle sidenote-number"></label>
-                <input type="checkbox" id="sn-7" class="margin-toggle"/>
+                <p><span class="newthought">In conclusion,</span> this page is a playground—a place to experiment with typography, layout, and the subtle art of presenting ideas clearly. Notice the reading time estimate beneath the subtitle? That sets expectations before you begin. The decorative drop cap on the opening paragraph signals that this is meant to be savored, not skimmed.<label for="sn-10" class="margin-toggle sidenote-number"></label>
+                <input type="checkbox" id="sn-10" class="margin-toggle"/>
+                <span class="sidenote">Drop caps have been used since medieval manuscripts. They serve both an aesthetic and practical purpose—marking the beginning of a new section while adding visual elegance to the page.</span></p>
+
+                <p>The sidenotes are working. The margins are breathing. The serif is doing its quiet, elegant work. And somewhere, perhaps, a reader has followed a thought from the main text to the margin and back again, their understanding slightly enriched by that small lateral journey.<label for="sn-11" class="margin-toggle sidenote-number"></label>
+                <input type="checkbox" id="sn-11" class="margin-toggle"/>
                 <span class="sidenote">If you've read this far, the experiment has succeeded. The form has served its purpose: carrying ideas from my mind to yours, with the sidenotes providing gentle elaboration along the way.</span></p>
 
             </article>
         </div>
     </div>
+
+    <script>
+        (function() {
+            // Reading progress indicator
+            const progressBar = document.getElementById('progress-bar');
+
+            function updateProgress() {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                progressBar.style.width = progress + '%';
+            }
+
+            window.addEventListener('scroll', updateProgress, { passive: true });
+            window.addEventListener('resize', updateProgress, { passive: true });
+            updateProgress();
+
+            // Reading time estimate
+            const article = document.querySelector('article');
+            const text = article.innerText;
+            const wordCount = text.trim().split(/\s+/).length;
+            const readingTime = Math.ceil(wordCount / 200); // 200 words per minute
+            document.getElementById('reading-time').textContent = readingTime + ' min read';
+
+            // Three-way theme toggle: light → sepia → dark
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIndicator = document.getElementById('theme-indicator');
+            const themes = ['light', 'sepia', 'dark'];
+
+            function getTheme() {
+                return localStorage.getItem('theme') || 'light';
+            }
+
+            function setTheme(theme) {
+                document.body.classList.remove('dark-mode', 'sepia-mode');
+                if (theme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                } else if (theme === 'sepia') {
+                    document.body.classList.add('sepia-mode');
+                }
+                localStorage.setItem('theme', theme);
+                themeIndicator.textContent = theme;
+            }
+
+            // Initialize theme
+            setTheme(getTheme());
+
+            themeToggle.addEventListener('click', () => {
+                const current = getTheme();
+                const nextIndex = (themes.indexOf(current) + 1) % themes.length;
+                setTheme(themes[nextIndex]);
+            });
+
+            // Sidenote paragraph highlighting
+            document.querySelectorAll('label.sidenote-number').forEach(label => {
+                label.addEventListener('click', () => {
+                    // Find the parent paragraph
+                    const paragraph = label.closest('p');
+                    if (paragraph) {
+                        // Remove any existing highlights
+                        document.querySelectorAll('.sidenote-highlight').forEach(el => {
+                            el.classList.remove('sidenote-highlight');
+                        });
+                        // Add highlight to this paragraph
+                        paragraph.classList.add('sidenote-highlight');
+                        // Remove highlight after 3 seconds
+                        setTimeout(() => {
+                            paragraph.classList.remove('sidenote-highlight');
+                        }, 3000);
+                    }
+                });
+            });
+
+            // Scroll-to-top button
+            const scrollToTopBtn = document.getElementById('scroll-to-top');
+            const scrollThreshold = 400;
+
+            function updateScrollToTop() {
+                if (window.scrollY > scrollThreshold) {
+                    scrollToTopBtn.classList.add('visible');
+                } else {
+                    scrollToTopBtn.classList.remove('visible');
+                }
+            }
+
+            window.addEventListener('scroll', updateScrollToTop, { passive: true });
+            updateScrollToTop();
+
+            scrollToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Current section indicator
+            const sectionIndicator = document.getElementById('section-indicator');
+            const headings = document.querySelectorAll('h2');
+            const sections = Array.from(headings).map(h => ({
+                el: h,
+                title: h.textContent
+            }));
+
+            function updateSectionIndicator() {
+                const scrollY = window.scrollY + 150;
+                let currentSection = null;
+
+                for (let i = sections.length - 1; i >= 0; i--) {
+                    if (scrollY >= sections[i].el.offsetTop) {
+                        currentSection = sections[i].title;
+                        break;
+                    }
+                }
+
+                if (currentSection && window.scrollY > 300) {
+                    sectionIndicator.textContent = currentSection;
+                    sectionIndicator.classList.add('visible');
+                } else {
+                    sectionIndicator.classList.remove('visible');
+                }
+            }
+
+            window.addEventListener('scroll', updateSectionIndicator, { passive: true });
+            updateSectionIndicator();
+        })();
+    </script>
 </body>
 </html>
