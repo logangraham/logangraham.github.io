@@ -9,14 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/common.css">
     <link rel="stylesheet" href="styles/test.css">
-    <script src="scripts/darkMode.js"></script>
 </head>
 <body>
     <div class="progress-bar" id="progress-bar"></div>
     <header class="site-header">
         <nav>
             <a href="/" class="nav-link">Home</a>
-            <button id="dark-mode-toggle" class="toggle-button"></button>
+            <button id="theme-toggle" class="toggle-button"></button><span class="theme-indicator" id="theme-indicator"></span>
         </nav>
     </header>
     <div class="container">
@@ -24,6 +23,7 @@
             <article>
                 <h1>On the Margin of Thought</h1>
                 <p class="subtitle">A test essay exploring sidenotes, typography, and the architecture of reading</p>
+                <p class="reading-time" id="reading-time"></p>
 
                 <section class="epigraph">
                     <p>The margins of a book are the wilderness surrounding the cultivated fields of the text.</p>
@@ -90,8 +90,8 @@
     </div>
 
     <script>
-        // Reading progress indicator
         (function() {
+            // Reading progress indicator
             const progressBar = document.getElementById('progress-bar');
 
             function updateProgress() {
@@ -104,6 +104,62 @@
             window.addEventListener('scroll', updateProgress, { passive: true });
             window.addEventListener('resize', updateProgress, { passive: true });
             updateProgress();
+
+            // Reading time estimate
+            const article = document.querySelector('article');
+            const text = article.innerText;
+            const wordCount = text.trim().split(/\s+/).length;
+            const readingTime = Math.ceil(wordCount / 200); // 200 words per minute
+            document.getElementById('reading-time').textContent = readingTime + ' min read';
+
+            // Three-way theme toggle: light → sepia → dark
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIndicator = document.getElementById('theme-indicator');
+            const themes = ['light', 'sepia', 'dark'];
+
+            function getTheme() {
+                return localStorage.getItem('theme') || 'light';
+            }
+
+            function setTheme(theme) {
+                document.body.classList.remove('dark-mode', 'sepia-mode');
+                if (theme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                } else if (theme === 'sepia') {
+                    document.body.classList.add('sepia-mode');
+                }
+                localStorage.setItem('theme', theme);
+                themeIndicator.textContent = theme;
+            }
+
+            // Initialize theme
+            setTheme(getTheme());
+
+            themeToggle.addEventListener('click', () => {
+                const current = getTheme();
+                const nextIndex = (themes.indexOf(current) + 1) % themes.length;
+                setTheme(themes[nextIndex]);
+            });
+
+            // Sidenote paragraph highlighting
+            document.querySelectorAll('label.sidenote-number').forEach(label => {
+                label.addEventListener('click', () => {
+                    // Find the parent paragraph
+                    const paragraph = label.closest('p');
+                    if (paragraph) {
+                        // Remove any existing highlights
+                        document.querySelectorAll('.sidenote-highlight').forEach(el => {
+                            el.classList.remove('sidenote-highlight');
+                        });
+                        // Add highlight to this paragraph
+                        paragraph.classList.add('sidenote-highlight');
+                        // Remove highlight after 3 seconds
+                        setTimeout(() => {
+                            paragraph.classList.remove('sidenote-highlight');
+                        }, 3000);
+                    }
+                });
+            });
         })();
     </script>
 </body>

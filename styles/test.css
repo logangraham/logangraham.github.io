@@ -16,6 +16,105 @@ body.dark-mode .progress-bar {
     background: linear-gradient(90deg, #f77 0%, #faa 100%);
 }
 
+/* Sepia/warm reading mode */
+body.sepia-mode {
+    background-color: #f4ecd8;
+    color: #433422;
+}
+
+body.sepia-mode .progress-bar {
+    background: linear-gradient(90deg, #8b4513 0%, #a0522d 100%);
+}
+
+body.sepia-mode .toggle-button {
+    background-color: #d4c4a8;
+}
+
+body.sepia-mode .subtitle {
+    color: #6b5344;
+}
+
+body.sepia-mode .sidenote,
+body.sepia-mode .marginnote {
+    color: #6b5344;
+}
+
+body.sepia-mode .sidenote-number::after,
+body.sepia-mode .sidenote::before {
+    color: #8b4513;
+}
+
+body.sepia-mode .epigraph {
+    border-left-color: #c4b498;
+}
+
+body.sepia-mode .epigraph footer {
+    color: #6b5344;
+}
+
+body.sepia-mode blockquote {
+    border-left-color: #c4b498;
+}
+
+body.sepia-mode hr {
+    border-top-color: #c4b498;
+}
+
+body.sepia-mode code {
+    background: #e8dcc8;
+}
+
+body.sepia-mode .drop-cap::first-letter {
+    color: #433422;
+}
+
+body.sepia-mode figcaption {
+    color: #6b5344;
+}
+
+/* Reading time estimate */
+.reading-time {
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: -1.5rem;
+    margin-bottom: 2rem;
+    letter-spacing: 0.02em;
+}
+
+body.dark-mode .reading-time {
+    color: #888;
+}
+
+body.sepia-mode .reading-time {
+    color: #8b7355;
+}
+
+/* Sidenote paragraph highlighting */
+p.sidenote-highlight {
+    background: linear-gradient(90deg, rgba(170, 0, 0, 0.08) 0%, transparent 100%);
+    margin-left: -1rem;
+    padding-left: 1rem;
+    border-radius: 3px;
+    transition: background 0.5s ease-out;
+}
+
+body.dark-mode p.sidenote-highlight {
+    background: linear-gradient(90deg, rgba(255, 119, 119, 0.12) 0%, transparent 100%);
+}
+
+body.sepia-mode p.sidenote-highlight {
+    background: linear-gradient(90deg, rgba(139, 69, 19, 0.1) 0%, transparent 100%);
+}
+
+/* Theme toggle three-state indicator */
+.theme-indicator {
+    font-size: 0.7rem;
+    margin-left: 8px;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
 /* Override container for wider layout to accommodate sidenotes */
 .container {
     width: 87%;
@@ -306,6 +405,12 @@ body.dark-mode hr {
         border-left-color: #f77;
     }
 
+    body.sepia-mode .sidenote,
+    body.sepia-mode .marginnote {
+        background: #e8dcc8;
+        border-left-color: #8b4513;
+    }
+
     .margin-toggle:checked + .sidenote,
     .margin-toggle:checked + .marginnote {
         max-height: 500px;
@@ -322,6 +427,10 @@ body.dark-mode hr {
 
     body.dark-mode label.margin-toggle:not(.sidenote-number) {
         color: #f77;
+    }
+
+    body.sepia-mode label.margin-toggle:not(.sidenote-number) {
+        color: #8b4513;
     }
 
     label.sidenote-number {
