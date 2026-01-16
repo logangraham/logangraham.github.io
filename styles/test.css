@@ -115,6 +115,117 @@ body.sepia-mode p.sidenote-highlight {
     letter-spacing: 0.05em;
 }
 
+/* Scroll-to-top button */
+.scroll-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease, background 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+}
+
+.scroll-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+    background: #555;
+}
+
+.scroll-to-top:active {
+    transform: scale(0.95);
+}
+
+body.dark-mode .scroll-to-top {
+    background: #fff;
+    color: #333;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .scroll-to-top:hover {
+    background: #ddd;
+}
+
+body.sepia-mode .scroll-to-top {
+    background: #433422;
+    color: #f4ecd8;
+}
+
+body.sepia-mode .scroll-to-top:hover {
+    background: #5a4a3a;
+}
+
+/* Current section indicator */
+.section-indicator {
+    position: fixed;
+    top: 50%;
+    left: 1.5rem;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    color: #999;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    letter-spacing: 0.1em;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-width: 1.2rem;
+    text-align: center;
+    font-style: italic;
+}
+
+.section-indicator.visible {
+    opacity: 1;
+}
+
+body.dark-mode .section-indicator {
+    color: #777;
+}
+
+body.sepia-mode .section-indicator {
+    color: #8b7355;
+}
+
+/* Page entrance animation */
+.fade-in {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Staggered delays for entrance */
+h1.fade-in { animation-delay: 0.1s; }
+.subtitle.fade-in { animation-delay: 0.2s; }
+.reading-time.fade-in { animation-delay: 0.25s; }
+.epigraph.fade-in { animation-delay: 0.35s; }
+article > p.fade-in:nth-of-type(1) { animation-delay: 0.45s; }
+article > p.fade-in:nth-of-type(2) { animation-delay: 0.5s; }
+article > h2.fade-in { animation-delay: 0.2s; }
+article > p.fade-in { animation-delay: 0.15s; }
+
 /* Override container for wider layout to accommodate sidenotes */
 .container {
     width: 87%;
@@ -440,6 +551,19 @@ body.dark-mode hr {
     /* Smaller drop cap on mobile */
     .drop-cap::first-letter {
         font-size: 3.2rem;
+    }
+
+    /* Hide section indicator on mobile */
+    .section-indicator {
+        display: none;
+    }
+
+    /* Adjust scroll-to-top on mobile */
+    .scroll-to-top {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 40px;
+        height: 40px;
     }
 }
 
