@@ -1,5 +1,21 @@
 /* Test Essay Styles - Tufte-inspired sidenotes & refined serif typography */
 
+/* Reading progress indicator */
+.progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg, #a00 0%, #c44 100%);
+    z-index: 1000;
+    transition: width 0.1s ease-out;
+}
+
+body.dark-mode .progress-bar {
+    background: linear-gradient(90deg, #f77 0%, #faa 100%);
+}
+
 /* Override container for wider layout to accommodate sidenotes */
 .container {
     width: 87%;
@@ -169,6 +185,21 @@ label.margin-toggle:not(.sidenote-number) {
     letter-spacing: 0.05em;
 }
 
+/* Drop cap for opening paragraph */
+.drop-cap::first-letter {
+    float: left;
+    font-size: 4.2rem;
+    line-height: 0.8;
+    padding-right: 0.12em;
+    margin-top: 0.05em;
+    font-weight: 400;
+    color: #333;
+}
+
+body.dark-mode .drop-cap::first-letter {
+    color: #fff;
+}
+
 /* Full-width figures */
 figure {
     margin: 2rem 0;
@@ -248,28 +279,39 @@ body.dark-mode hr {
         max-width: 100%;
     }
 
-    /* Convert sidenotes to inline on mobile */
+    /* Convert sidenotes to inline on mobile with smooth transitions */
     .sidenote,
     .marginnote {
-        display: none;
-    }
-
-    .margin-toggle:checked + .sidenote,
-    .margin-toggle:checked + .marginnote {
         display: block;
         float: none;
         left: 0;
         width: 100%;
-        margin: 1rem 0;
-        padding: 0.8rem 1rem;
+        margin: 0;
+        padding: 0 1rem;
         background: #f9f9f9;
         border-left: 3px solid #a00;
+        /* Smooth expand/collapse animation */
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.35s ease-out,
+                    opacity 0.25s ease-out,
+                    margin 0.35s ease-out,
+                    padding 0.35s ease-out;
     }
 
-    body.dark-mode .margin-toggle:checked + .sidenote,
-    body.dark-mode .margin-toggle:checked + .marginnote {
+    body.dark-mode .sidenote,
+    body.dark-mode .marginnote {
         background: #3a3a3a;
         border-left-color: #f77;
+    }
+
+    .margin-toggle:checked + .sidenote,
+    .margin-toggle:checked + .marginnote {
+        max-height: 500px;
+        opacity: 1;
+        margin: 1rem 0;
+        padding: 0.8rem 1rem;
     }
 
     label.margin-toggle:not(.sidenote-number) {
@@ -284,6 +326,11 @@ body.dark-mode hr {
 
     label.sidenote-number {
         display: inline;
+    }
+
+    /* Smaller drop cap on mobile */
+    .drop-cap::first-letter {
+        font-size: 3.2rem;
     }
 }
 
