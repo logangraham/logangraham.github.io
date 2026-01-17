@@ -565,6 +565,277 @@ body.dark-mode hr {
         width: 40px;
         height: 40px;
     }
+
+    /* Page flip mode for mobile */
+    body.page-mode {
+        overflow: hidden;
+        height: 100vh;
+        height: 100dvh; /* Dynamic viewport height for mobile browsers */
+    }
+
+    body.page-mode .container {
+        height: 100%;
+        padding: 0;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    body.page-mode .main-content {
+        height: 100%;
+    }
+
+    body.page-mode article {
+        display: none; /* Hide original article in page mode */
+    }
+
+    /* Page flip container */
+    .page-flip-container {
+        display: none;
+        position: relative;
+        width: 100%;
+        height: calc(100vh - 60px);
+        height: calc(100dvh - 60px);
+        perspective: 1500px;
+        overflow: hidden;
+    }
+
+    body.page-mode .page-flip-container {
+        display: block;
+    }
+
+    .page {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 1.5rem 1.25rem 4rem;
+        box-sizing: border-box;
+        background: #fff;
+        overflow-y: auto;
+        transform-origin: left center;
+        backface-visibility: hidden;
+        transition: transform 0.4s ease-out, box-shadow 0.4s ease-out;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body.dark-mode .page {
+        background: #333;
+    }
+
+    body.sepia-mode .page {
+        background: #f4ecd8;
+    }
+
+    .page.current {
+        z-index: 2;
+        transform: rotateY(0deg);
+    }
+
+    .page.next {
+        z-index: 1;
+        transform: rotateY(0deg);
+    }
+
+    .page.prev {
+        z-index: 3;
+        transform: rotateY(-180deg);
+    }
+
+    .page.flipping {
+        transition: none;
+    }
+
+    .page.flip-complete {
+        transform: rotateY(-180deg);
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Page shadow during flip */
+    .page::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 50px;
+        background: linear-gradient(to left, rgba(0,0,0,0.1) 0%, transparent 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    .page.flipping::after,
+    .page.flip-complete::after {
+        opacity: 1;
+    }
+
+    /* Page content styling */
+    .page-content {
+        font-size: 1.1rem;
+        line-height: 1.7;
+    }
+
+    .page-content h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-content h2 {
+        font-size: 1.4rem;
+        margin-top: 0;
+    }
+
+    .page-content .subtitle {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .page-content .epigraph {
+        margin: 1rem 0 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    /* Page indicator dots */
+    .page-indicator {
+        position: fixed;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: none;
+        gap: 8px;
+        z-index: 100;
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    body.page-mode .page-indicator {
+        display: flex;
+    }
+
+    body.dark-mode .page-indicator {
+        background: rgba(51, 51, 51, 0.9);
+    }
+
+    body.sepia-mode .page-indicator {
+        background: rgba(244, 236, 216, 0.9);
+    }
+
+    .page-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ccc;
+        transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .page-dot.active {
+        background: #a00;
+        transform: scale(1.2);
+    }
+
+    body.dark-mode .page-dot {
+        background: #555;
+    }
+
+    body.dark-mode .page-dot.active {
+        background: #f77;
+    }
+
+    body.sepia-mode .page-dot {
+        background: #c4b498;
+    }
+
+    body.sepia-mode .page-dot.active {
+        background: #8b4513;
+    }
+
+    /* Page mode toggle button */
+    .page-mode-toggle {
+        position: fixed;
+        bottom: 1.5rem;
+        left: 1.5rem;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #333;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        z-index: 100;
+        transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .page-mode-toggle:active {
+        transform: scale(0.95);
+    }
+
+    body.dark-mode .page-mode-toggle {
+        background: #fff;
+        color: #333;
+    }
+
+    body.sepia-mode .page-mode-toggle {
+        background: #433422;
+        color: #f4ecd8;
+    }
+
+    body.page-mode .page-mode-toggle {
+        background: #a00;
+        color: #fff;
+    }
+
+    body.page-mode.dark-mode .page-mode-toggle {
+        background: #f77;
+        color: #333;
+    }
+
+    body.page-mode.sepia-mode .page-mode-toggle {
+        background: #8b4513;
+        color: #f4ecd8;
+    }
+
+    /* Hide scroll-to-top and progress bar in page mode */
+    body.page-mode .scroll-to-top,
+    body.page-mode .progress-bar {
+        display: none;
+    }
+
+    /* Swipe hint animation */
+    .swipe-hint {
+        position: fixed;
+        top: 50%;
+        right: 2rem;
+        transform: translateY(-50%);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 50;
+        animation: swipeHint 2s ease-in-out 1s forwards;
+    }
+
+    .swipe-hint::before {
+        content: '👆';
+        font-size: 1.5rem;
+        animation: swipeMove 1s ease-in-out 1.5s 2;
+    }
+
+    @keyframes swipeHint {
+        0%, 100% { opacity: 0; }
+        20%, 80% { opacity: 0.7; }
+    }
+
+    @keyframes swipeMove {
+        0%, 100% { transform: translateX(0); }
+        50% { transform: translateX(-30px); }
+    }
 }
 
 /* Print styles */

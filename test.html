@@ -112,8 +112,12 @@
                 <span class="sidenote">If you've read this far, the experiment has succeeded. The form has served its purpose: carrying ideas from my mind to yours, with the sidenotes providing gentle elaboration along the way.</span></p>
 
             </article>
+            <div class="page-flip-container" id="page-flip-container"></div>
         </div>
     </div>
+    <div class="page-indicator" id="page-indicator"></div>
+    <button class="page-mode-toggle" id="page-mode-toggle" aria-label="Toggle page flip mode">📖</button>
+    <div class="swipe-hint" id="swipe-hint"></div>
 
     <script>
         (function() {
@@ -235,6 +239,286 @@
 
             window.addEventListener('scroll', updateSectionIndicator, { passive: true });
             updateSectionIndicator();
+
+            // ==========================================
+            // Page Flip Mode (Mobile Only)
+            // ==========================================
+
+            const pageFlipContainer = document.getElementById('page-flip-container');
+            const pageIndicator = document.getElementById('page-indicator');
+            const pageModeToggle = document.getElementById('page-mode-toggle');
+            const swipeHint = document.getElementById('swipe-hint');
+
+            let pages = [];
+            let currentPageIndex = 0;
+            let isPageMode = false;
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let touchCurrentX = 0;
+            let isDragging = false;
+            let dragStartTime = 0;
+
+            // Only enable on mobile
+            const isMobile = () => window.innerWidth <= 900;
+
+            // Split content into pages based on sections
+            function paginateContent() {
+                const article = document.querySelector('article');
+                const children = Array.from(article.children);
+
+                // Group content into logical pages
+                const pageGroups = [];
+                let currentGroup = [];
+
+                children.forEach((child, index) => {
+                    // Start new page on h2 or after accumulating enough content
+                    if (child.tagName === 'H2' && currentGroup.length > 0) {
+                        pageGroups.push(currentGroup);
+                        currentGroup = [];
+                    }
+
+                    // Skip margin-toggle labels and inputs that are standalone
+                    if (child.tagName === 'LABEL' || child.tagName === 'INPUT') {
+                        // Include with next element
+                        currentGroup.push(child);
+                        return;
+                    }
+
+                    currentGroup.push(child);
+
+                    // Create page after ~3-4 paragraphs or significant content
+                    const contentElements = currentGroup.filter(el =>
+                        el.tagName === 'P' || el.tagName === 'BLOCKQUOTE' || el.tagName === 'SECTION'
+                    ).length;
+
+                    if (contentElements >= 3 && child.tagName !== 'H2') {
+                        // Check if next element is not a sidenote/margin related
+                        const nextChild = children[index + 1];
+                        if (!nextChild || (nextChild.tagName !== 'LABEL' && nextChild.tagName !== 'INPUT' && nextChild.tagName !== 'SPAN')) {
+                            pageGroups.push(currentGroup);
+                            currentGroup = [];
+                        }
+                    }
+                });
+
+                if (currentGroup.length > 0) {
+                    pageGroups.push(currentGroup);
+                }
+
+                return pageGroups;
+            }
+
+            // Render pages
+            function renderPages() {
+                const pageGroups = paginateContent();
+                pageFlipContainer.innerHTML = '';
+                pageIndicator.innerHTML = '';
+                pages = [];
+
+                pageGroups.forEach((group, index) => {
+                    const page = document.createElement('div');
+                    page.className = 'page' + (index === 0 ? ' current' : index === 1 ? ' next' : '');
+                    page.dataset.index = index;
+
+                    const content = document.createElement('div');
+                    content.className = 'page-content';
+
+                    group.forEach(el => {
+                        const clone = el.cloneNode(true);
+                        // Remove fade-in class from clones
+                        clone.classList.remove('fade-in');
+                        content.appendChild(clone);
+                    });
+
+                    page.appendChild(content);
+                    pageFlipContainer.appendChild(page);
+                    pages.push(page);
+
+                    // Create indicator dot
+                    const dot = document.createElement('div');
+                    dot.className = 'page-dot' + (index === 0 ? ' active' : '');
+                    dot.dataset.index = index;
+                    dot.addEventListener('click', () => goToPage(index));
+                    pageIndicator.appendChild(dot);
+                });
+            }
+
+            // Update page visibility
+            function updatePageVisibility() {
+                pages.forEach((page, index) => {
+                    page.classList.remove('current', 'next', 'prev', 'flip-complete');
+                    if (index === currentPageIndex) {
+                        page.classList.add('current');
+                    } else if (index === currentPageIndex + 1) {
+                        page.classList.add('next');
+                    } else if (index < currentPageIndex) {
+                        page.classList.add('prev');
+                    }
+                });
+
+                // Update dots
+                document.querySelectorAll('.page-dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentPageIndex);
+                });
+            }
+
+            // Go to specific page
+            function goToPage(index) {
+                if (index >= 0 && index < pages.length) {
+                    currentPageIndex = index;
+                    updatePageVisibility();
+                }
+            }
+
+            // Toggle page mode
+            function togglePageMode() {
+                if (!isMobile()) return;
+
+                isPageMode = !isPageMode;
+                document.body.classList.toggle('page-mode', isPageMode);
+
+                if (isPageMode) {
+                    renderPages();
+                    currentPageIndex = 0;
+                    updatePageVisibility();
+                    // Show swipe hint on first enable
+                    if (!localStorage.getItem('pageFlipHintShown')) {
+                        swipeHint.style.display = 'block';
+                        localStorage.setItem('pageFlipHintShown', 'true');
+                    }
+                }
+
+                localStorage.setItem('pageMode', isPageMode ? 'true' : 'false');
+            }
+
+            // Touch handlers for page flip
+            function handleTouchStart(e) {
+                if (!isPageMode) return;
+
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                touchCurrentX = touchStartX;
+                isDragging = true;
+                dragStartTime = Date.now();
+
+                const currentPage = pages[currentPageIndex];
+                if (currentPage) {
+                    currentPage.classList.add('flipping');
+                }
+            }
+
+            function handleTouchMove(e) {
+                if (!isPageMode || !isDragging) return;
+
+                touchCurrentX = e.touches[0].clientX;
+                const touchCurrentY = e.touches[0].clientY;
+
+                // Calculate deltas
+                const deltaX = touchCurrentX - touchStartX;
+                const deltaY = touchCurrentY - touchStartY;
+
+                // If scrolling more vertically, let it scroll
+                if (Math.abs(deltaY) > Math.abs(deltaX) * 1.5) {
+                    return;
+                }
+
+                // Prevent default only for horizontal swipes
+                if (Math.abs(deltaX) > 10) {
+                    e.preventDefault();
+                }
+
+                const currentPage = pages[currentPageIndex];
+                if (!currentPage) return;
+
+                // Calculate rotation based on drag distance
+                const screenWidth = window.innerWidth;
+                const dragPercent = Math.max(-1, Math.min(1, deltaX / (screenWidth * 0.5)));
+
+                if (deltaX < 0 && currentPageIndex < pages.length - 1) {
+                    // Swiping left (next page) - rotate current page
+                    const rotation = dragPercent * 90; // Max 90 degrees
+                    currentPage.style.transform = `rotateY(${rotation}deg)`;
+                    currentPage.style.boxShadow = `${-dragPercent * 10}px 0 ${20 - dragPercent * 10}px rgba(0, 0, 0, ${0.1 - dragPercent * 0.1})`;
+                } else if (deltaX > 0 && currentPageIndex > 0) {
+                    // Swiping right (prev page) - rotate previous page back
+                    const prevPage = pages[currentPageIndex - 1];
+                    if (prevPage) {
+                        prevPage.classList.add('flipping');
+                        const rotation = -180 + (dragPercent * 90);
+                        prevPage.style.transform = `rotateY(${rotation}deg)`;
+                    }
+                }
+            }
+
+            function handleTouchEnd(e) {
+                if (!isPageMode || !isDragging) return;
+
+                isDragging = false;
+                const deltaX = touchCurrentX - touchStartX;
+                const dragDuration = Date.now() - dragStartTime;
+                const velocity = Math.abs(deltaX) / dragDuration;
+
+                const currentPage = pages[currentPageIndex];
+                if (currentPage) {
+                    currentPage.classList.remove('flipping');
+                    currentPage.style.transform = '';
+                    currentPage.style.boxShadow = '';
+                }
+
+                // Threshold for page flip: either distance or velocity
+                const threshold = window.innerWidth * 0.25;
+                const velocityThreshold = 0.5;
+
+                if (deltaX < -threshold || (deltaX < -50 && velocity > velocityThreshold)) {
+                    // Next page
+                    if (currentPageIndex < pages.length - 1) {
+                        currentPageIndex++;
+                        updatePageVisibility();
+                    }
+                } else if (deltaX > threshold || (deltaX > 50 && velocity > velocityThreshold)) {
+                    // Previous page
+                    if (currentPageIndex > 0) {
+                        const prevPage = pages[currentPageIndex - 1];
+                        if (prevPage) {
+                            prevPage.classList.remove('flipping');
+                            prevPage.style.transform = '';
+                        }
+                        currentPageIndex--;
+                        updatePageVisibility();
+                    }
+                } else {
+                    // Snap back
+                    if (currentPageIndex > 0) {
+                        const prevPage = pages[currentPageIndex - 1];
+                        if (prevPage) {
+                            prevPage.classList.remove('flipping');
+                            prevPage.style.transform = '';
+                        }
+                    }
+                }
+            }
+
+            // Initialize page mode
+            if (isMobile()) {
+                pageModeToggle.addEventListener('click', togglePageMode);
+
+                pageFlipContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
+                pageFlipContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
+                pageFlipContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+                // Restore page mode preference
+                if (localStorage.getItem('pageMode') === 'true') {
+                    togglePageMode();
+                }
+            }
+
+            // Handle resize
+            window.addEventListener('resize', () => {
+                if (!isMobile() && isPageMode) {
+                    document.body.classList.remove('page-mode');
+                    isPageMode = false;
+                }
+            });
         })();
     </script>
 </body>
